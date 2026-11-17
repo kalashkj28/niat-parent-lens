@@ -1,0 +1,3 @@
+# Production dependencies for NIAT Parent Decision Lens
+# Pure Python 3 standard library architecture (http.server, sqlite3, json, math)
+# Zero external packages required for zero attack-surface and instant deployment.
