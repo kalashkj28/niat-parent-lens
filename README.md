@@ -3,7 +3,9 @@
 **Growth Hack Challenge Round 1 | NxtWave Jr. Growth Manager (AI, Experiments & Community)**  
 **Candidate:** Kalash (B.Tech, NIT Raipur)  
 **Track:** Track A (Top of Funnel Parent Acquisition & Decision Clarity)  
-**Avenue:** Regional College Fee & ROI Decision Tool with Verified UGC Accreditation Lookup
+**Avenue:** Regional College Fee & ROI Decision Tool with Verified UGC Accreditation Lookup  
+**Live Production URL:** [https://niat-parent-lens.onrender.com](https://niat-parent-lens.onrender.com)  
+**Repository:** [https://github.com/kalashkj28/niat-parent-lens](https://github.com/kalashkj28/niat-parent-lens)
 
 ---
 
