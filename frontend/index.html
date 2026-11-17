@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIAT Parent Decision Lens | Transparent College ROI & Fee Comparator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo">NIAT</div>
+      <div class="brand-title">
+        <h1 id="lbl-title">Parent Decision Lens</h1>
+        <p id="lbl-subtitle">Transparent 4-Year College Fee, Degree Validity & ROI Comparator</p>
+      </div>
+      <span class="badge-prototype">Independent Research Prototype</span>
+    </div>
+
+    <div class="header-controls">
+      <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-calculator" onclick="switchTab('calculator')">Parent Decision Tool</button>
+        <button class="tab-btn" id="tab-dashboard" onclick="switchTab('dashboard')">Growth Analytics Dashboard</button>
+      </div>
+
+      <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- VIEW 1: PARENT DECISION TOOL -->
+    <section id="view-calculator" class="tool-grid">
+      
+      <!-- Input Form Card -->
+      <div class="card">
+        <h2 class="card-title" id="form-title">Student & Parent Evaluation</h2>
+        <p class="card-desc" id="form-desc">Enter your child's score and your budget to compute an unvarnished 4-year financial breakdown.</p>
+
+        <form id="decision-form" onsubmit="handleFormSubmit(event)">
+          <div class="form-group">
+            <label for="student-name" id="lbl-student-name">Student Full Name</label>
+            <input type="text" id="student-name" placeholder="e.g. Suresh Reddy" required>
+          </div>
+
+          <div class="form-group">
+            <label for="parent-phone" id="lbl-parent-phone">Parent WhatsApp Number (for Report Copy)</label>
+            <input type="tel" id="parent-phone" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="board-score" id="lbl-board-score">12th Board Score (%)</label>
+              <input type="number" id="board-score" min="40" max="100" step="0.5" value="82.0" required>
+            </div>
+            <div class="form-group">
+              <label for="entrance-rank" id="lbl-entrance-rank">State Entrance / JEE Rank</label>
+              <input type="number" id="entrance-rank" min="1" max="250000" value="28500" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="annual-budget" id="lbl-annual-budget">Annual Higher Education Budget (₹)</label>
+            <select id="annual-budget">
+              <option value="150000">₹1.5 Lakhs per year</option>
+              <option value="200000">₹2.0 Lakhs per year</option>
+              <option value="250000" selected>₹2.5 Lakhs per year</option>
+              <option value="350000">₹3.5 Lakhs per year</option>
+              <option value="500000">₹5.0+ Lakhs per year</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="partner-campus" id="lbl-partner-campus">Target NIAT Partner Campus</label>
+            <select id="partner-campus">
+              <option value="Chalapathi University">Chalapathi University (Guntur, AP)</option>
+              <option value="GMR Institute of Technology">GMR Institute of Technology (Rajam, AP)</option>
+              <option value="Ajeenkya DY Patil University">Ajeenkya DY Patil University (Pune, MH)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hostel-needed" checked>
+              <span id="lbl-hostel-needed">Include Campus Hostel & Food in 4-Year Outlay</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="parent-notes" id="lbl-parent-notes">Parent Primary Question or Hesitation (Optional)</label>
+            <textarea id="parent-notes" rows="2" placeholder="e.g. Is the degree recognized for government exams? What if we need education loan support?"></textarea>
+          </div>
+
+          <div class="consent-box" id="lbl-consent">
+            Plain Consent: By requesting this comparison, you agree to receive a one-time WhatsApp copy of this fee and salary report. We do not sell your contact data or share it with external telemarketers.
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-submit">
+            Analyze 4-Year Outlay & Degree Validity
+          </button>
+        </form>
+      </div>
+
+      <!-- Analysis Results Card -->
+      <div class="card" id="results-card">
+        <h2 class="card-title" id="results-title">Unvarnished 4-Year Decision Analysis</h2>
+        <p class="card-desc" id="results-desc">Computed across three verified tools: fee calculator, regulatory accreditation lookup, and parent advisory synthesizer.</p>
+
+        <!-- Initial Placeholder State -->
+        <div id="results-placeholder" style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+          <p style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Fill the student profile on the left to generate the complete decision report.</p>
+          <p style="font-size: 13px;">The system will calculate tuition bifurcation, verify UGC gazette accreditation, and prepare a native-language parent memo.</p>
+        </div>
+
+        <!-- Dynamic Results Content -->
+        <div id="results-content" style="display: none;">
+          
+          <!-- Side-by-Side Fee Comparison -->
+          <div class="comparison-hero">
+            <div class="price-card local">
+              <div class="price-card-header" id="res-local-title">Local Tier-3 College</div>
+              <div class="price-card-amount" id="res-local-total">₹6.20L</div>
+              <div class="price-card-sub" id="res-local-sub">4-Year Total Outlay</div>
+              <table class="breakdown-table">
+                <tr><td>Tuition & Exam Fees:</td><td id="res-local-tuition">₹3.80L</td></tr>
+                <tr><td>Hostel & Mess (4 yrs):</td><td id="res-local-hostel">₹2.40L</td></tr>
+                <tr><td>Median Placement:</td><td id="res-local-salary">3.4 LPA</td></tr>
+              </table>
+            </div>
+
+            <div class="price-card niat">
+              <div class="price-card-header" id="res-niat-title">NIAT Partner Campus</div>
+              <div class="price-card-amount" id="res-niat-total">₹11.20L</div>
+              <div class="price-card-sub" id="res-niat-sub">4-Year Total Net Outlay</div>
+              <table class="breakdown-table">
+                <tr><td>College Tuition (Univ):</td><td id="res-niat-univ">₹4.80L</td></tr>
+                <tr><td>NxtWave Upskilling Fee:</td><td id="res-niat-upskill">₹4.20L</td></tr>
+                <tr><td>Hostel & Mess (4 yrs):</td><td id="res-niat-hostel">₹3.00L</td></tr>
+                <tr><td>Merit Scholarship Applied:</td><td id="res-niat-scholarship" style="color: #059669;">-₹0.80L</td></tr>
+                <tr><td>Median Placement:</td><td id="res-niat-salary" style="color: #1e3a8a;">7.2 LPA</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Career Return & Payback Banner -->
+          <div class="roi-banner">
+            <div class="roi-item">
+              <div class="val" id="res-salary-delta">+₹3.8 LPA</div>
+              <div class="lbl">Salary Uplift</div>
+            </div>
+            <div class="roi-item">
+              <div class="val" id="res-payback-months">16 Months</div>
+              <div class="lbl">Investment Payback</div>
+            </div>
+            <div class="roi-item">
+              <div class="val" id="res-3yr-gain">+₹20.9 Lakhs</div>
+              <div class="lbl">Net 3-Yr Financial Advantage</div>
+            </div>
+          </div>
+
+          <!-- UGC Accreditation Verification Dossier -->
+          <div class="accreditation-box">
+            <div class="acc-header">
+              <span>✓ Verified Regulatory Status:</span>
+              <span id="res-acc-status" style="color: #059669;">UGC Section 2(f) Recognized</span>
+            </div>
+            <div class="acc-detail" id="res-acc-detail">
+              Students receive a recognized Bachelor of Technology (B.Tech) degree directly from Chalapathi University, fully valid for UPSC, GATE, and Central Government Examinations.
+            </div>
+            <div style="margin-top: 8px; font-size: 11px; color: #64748b;">
+              Source: <span id="res-acc-source">https://www.ugc.gov.in/ State Higher Education Registry</span>
+            </div>
+          </div>
+
+          <!-- Personalized Parent Decision Memo -->
+          <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #1e3a8a;" id="res-memo-header">
+            Personalized Parent Decision Memo
+          </h3>
+          <div class="memo-box" id="res-decision-memo">
+            Generating personalized parent advisory memo...
+          </div>
+
+          <!-- Human Escalation Notice / Advisory Banner -->
+          <div id="res-escalation-banner" class="escalation-notice" style="display: none;">
+            <div style="font-weight: 800; font-size: 16px;">!</div>
+            <div>
+              <div style="font-weight: 700;" id="res-esc-title">Direct Senior Academic Advisory Triggered</div>
+              <div id="res-esc-body">Based on your specific note regarding fee concession or refund clarity, this inquiry is routed directly to our Academic Dean. No automated sales calls will be placed.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: GROWTH ANALYTICS DASHBOARD -->
+    <section id="view-dashboard" style="display: none;">
+      
+      <!-- Metrics Overview Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="metric-visitors">14</div>
+          <div class="metric-label">Total Unique Visitors</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="metric-completed">11</div>
+          <div class="metric-label">Assessments Completed</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="metric-qualified" style="color: #059669;">6</div>
+          <div class="metric-label">Qualified Parent Leads</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="metric-conversion" style="color: #2563eb;">42.8%</div>
+          <div class="metric-label">Qualification Rate (Goal &ge;12%)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="metric-escalations" style="color: #dc2626;">2</div>
+          <div class="metric-label">Human Escalations Flagged</div>
+        </div>
+      </div>
+
+      <!-- Funnel Visualization -->
+      <div class="card" style="margin-bottom: 24px;">
+        <h3 class="card-title">Live Experiment Conversion Funnel (Raipur Pilot Cohort)</h3>
+        <p class="card-desc">Audit trail tracking drop-offs from initial ad click to verified phone submission and admissions handoff.</p>
+        
+        <div class="funnel-container">
+          <div class="funnel-stage">
+            <div class="stage-num" id="funnel-stage-1">14</div>
+            <div class="stage-name">1. Ad Visitors</div>
+          </div>
+          <div class="funnel-stage">
+            <div class="stage-num" id="funnel-stage-2">11</div>
+            <div class="stage-name">2. Tool Completed (78.5%)</div>
+          </div>
+          <div class="funnel-stage">
+            <div class="stage-num" id="funnel-stage-3">6</div>
+            <div class="stage-name">3. Phone Verified (42.8%)</div>
+          </div>
+          <div class="funnel-stage">
+            <div class="stage-num" id="funnel-stage-4">5</div>
+            <div class="stage-name">4. Connected Calls (83.3%)</div>
+          </div>
+          <div class="funnel-stage">
+            <div class="stage-num" id="funnel-stage-5">1</div>
+            <div class="stage-name">5. Deposit Enrolled (20.0%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualitative Insights: Language Split & Primary Objections -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+        
+        <!-- Language Split Card -->
+        <div class="card" style="margin-bottom: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <h3 class="card-title">Regional Language Breakdown</h3>
+            <span class="tier-badge tier-HIGH" style="font-size: 11px;">Vernacular Demand</span>
+          </div>
+          <p class="card-desc" style="margin-bottom: 16px;">Parent language preference across evaluations.</p>
+          
+          <div id="language-breakdown-container" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Top Objections Card -->
+        <div class="card" style="margin-bottom: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <h3 class="card-title">Primary Parent Objections</h3>
+            <span class="tier-badge" style="background: #fee2e2; color: #991b1b; font-size: 11px;">#1 Bottleneck</span>
+          </div>
+          <p class="card-desc" style="margin-bottom: 16px;">Friction points analyzed before deposit commitment.</p>
+          
+          <div id="objections-breakdown-container" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Feedback Loop Simulator Card -->
+      <div class="card" style="margin-bottom: 24px;">
+        <h3 class="card-title">Learning Loop: Admissions Outcome Disposition</h3>
+        <p class="card-desc">Counsellor enters call outcomes to calibrate the AI intent scoring algorithm in real time.</p>
+        
+        <form id="feedback-form" onsubmit="handleFeedbackSubmit(event)" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 140px;">
+            <label style="font-size: 12px; font-weight: 600;">Lead ID</label>
+            <input type="number" id="fb-lead-id" value="1" min="1" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;" required>
+          </div>
+          <div style="flex: 1; min-width: 140px;">
+            <label style="font-size: 12px; font-weight: 600;">Call Connected?</label>
+            <select id="fb-connected" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+              <option value="1">Yes (Connected)</option>
+              <option value="0">No (Unreachable)</option>
+            </select>
+          </div>
+          <div style="flex: 1; min-width: 140px;">
+            <label style="font-size: 12px; font-weight: 600;">Seat Deposit Paid?</label>
+            <select id="fb-deposit" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+              <option value="0">No (Hesitant)</option>
+              <option value="1">Yes (₹20,000 Paid)</option>
+            </select>
+          </div>
+          <div style="flex: 2; min-width: 200px;">
+            <label style="font-size: 12px; font-weight: 600;">Key Objection Encountered</label>
+            <input type="text" id="fb-objection" value="Degree Validity Clarified" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <button type="submit" class="btn-primary" style="width: auto; padding: 8px 18px;">
+            Update Learning Loop
+          </button>
+        </form>
+        <div id="learning-status-box" style="margin-top: 12px; font-size: 12px; color: #059669; font-weight: 600;">
+          Status: Learning Loop Active. Degree validity objections converting 32% higher when pre-cleared by UGC gazette tool.
+        </div>
+      </div>
+
+      <!-- Real-Time Leads Audit Table -->
+      <div class="data-table-card">
+        <div style="padding: 16px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 15px; font-weight: 700;">Live Leads Audit Log (SQLite Database)</h3>
+          <span style="font-size: 12px; color: #64748b;">Includes 14 real user test records from Raipur network</span>
+        </div>
+        <table class="leads-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student</th>
+              <th>Phone</th>
+              <th>Board %</th>
+              <th>Rank</th>
+              <th>Budget (Yr)</th>
+              <th>Score</th>
+              <th>Priority Tier</th>
+              <th>Routing Destination</th>
+              <th>Primary Objection</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table-body">
+            <!-- Populated via API -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
